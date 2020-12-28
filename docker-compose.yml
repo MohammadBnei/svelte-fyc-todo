@@ -1,0 +1,13 @@
+version: '3.4'
+
+services: 
+    svelte:
+        build: .
+        volumes:
+            - /app/node_modules
+            - ./:/app
+        ports: 
+            - 5000:5000 
+            - 35729:35729 
+            - 3572:3572
+        stdin_open: true

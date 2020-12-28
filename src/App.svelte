@@ -2,4 +2,4 @@
   // component logic
 </script>
 
-<!-- component markup -->
+<h1> Hello </h1>

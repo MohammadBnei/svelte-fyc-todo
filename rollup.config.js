@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import rollup_start_dev from './rollup_start_dev';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -30,8 +31,15 @@ export default {
 		// some cases you'll need additional configuration —
 		// consult the documentation for details:
 		// https://github.com/rollup/rollup-plugin-commonjs
-		resolve({ browser: true }),
+		resolve({
+			browser: true,
+			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
+		}),
 		commonjs(),
+		
+		// In dev mode, call `npm run start:dev` once
+		// the bundle has been generated
+		!production && rollup_start_dev,
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
@@ -42,6 +50,12 @@ export default {
 		production && terser()
 	],
 	watch: {
-		clearScreen: false
+		clearScreen: false,
+		chokidar:{
+			paths: 'src',
+			usePolling: true,
+			interval: 1000, //increase value for larger projects
+			binaryInterval: 3000, //increase value for larger projects
+		}
 	}
 };
